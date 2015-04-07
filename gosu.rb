@@ -99,12 +99,16 @@ class GameWindow < Gosu::Window
       @game.universe.randomly_recovery
     when id == Gosu::KbLeft
       left_all(@lines)
+      add_value(@lines)
     when id == Gosu::KbRight
       right_all(@lines)
+      add_value(@lines)
     when id == Gosu::KbUp
       @lines = up_all(@lines)
+      add_value(@lines)
     when id == Gosu::KbDown
       @lines = down_all(@lines)
+      add_value(@lines)
     end
   end
 
@@ -136,8 +140,19 @@ class GameWindow < Gosu::Window
   end
 
   def left_all(lines)
+    # lines_cheak = lines.dup
     lines.each do |line|
       left(line)
+    end
+    # add_value(lines)
+  end
+  def add_value(lines)
+    x = rand(3)
+    y = rand(3)
+    if lines[x][y] == nil
+      lines[x][y] = rand > 0.1 ? 2 : 4
+    else
+      add_value(lines)
     end
   end
   def right_all(lines)
