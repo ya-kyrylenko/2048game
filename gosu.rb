@@ -9,30 +9,36 @@ class GameWindow < Gosu::Window
     self.caption = "2048     (¬_¬) press Escape to exit ^~^"
 
     @background = Gosu::Color.new(0xffbbf6e2)
+    @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
 
     @color2 = Gosu::Color.new(0xff75cae3)
     @color4 = Gosu::Color.new(0xff238dac)
     @color8 = Gosu::Color.new(0xff124a5a)
     @color16 = Gosu::Color.new(0xff0c2f3a)
-    @color32 = Gosu::Color.new(0xff89f888)
+    @color32 = Gosu::Color.new(0xff91f22e)
     @color64 = Gosu::Color.new(0xff2df22c)
     @color128 = Gosu::Color.new(0xff0dc30c)
     @color256 = Gosu::Color.new(0xff087a07)
-    @color512 = Gosu::Color.new(0xfff3e376)
-    @color1024 = Gosu::Color.new(0xffbca610)
-    @color2048 = Gosu::Color.new(0xff504607)
+    @color512 = Gosu::Color.new(0xffe0c613)
+    @color1024 = Gosu::Color.new(0xff74660a)
+    @color2048 = Gosu::Color.new(0xffef19f1)
     @free = Gosu::Color.new(0xffb6e3f0)
     @dead_color = Gosu::Color.new(0xffffffff)
     @columns = width/100
     @rows = height/100
     @column_w = width/@columns
     @row_h = height/@rows
-    @board = Board.new(@columns, @rows)
-    @game = LogicGame.new(@board)
+    @board = Board.new()
+    2.times { @board.add_value(@board.grid) }
+    # @game = LogicGame.new(@board)
     # @game.board.rand_value
-    @lines = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, nil],[nil,nil,nil,nil]]
-    # @lines = [[2, 2, nil, 4],[nil,nil,nil,nil],[nil,nil,nil,nil],[nil,nil,nil,nil]]
+    # @lines = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 1024],[2,2,4,8]]
+    # @lines = [[2, 2, nil, nil],[nil,nil,nil,nil],[nil,nil,nil,nil],[nil,nil,nil,nil]]
+    # @lines = [[2, 2, nil, nil, nil],[nil,nil,nil,nil, nil],[nil,nil,nil,nil,nil],[nil,nil,nil,nil,nil]]
   end
+  module ZOrder
+  Background, Stars, Player, UI = *0..3
+end
 
   def update
   end
@@ -42,8 +48,8 @@ class GameWindow < Gosu::Window
               width, 0, @background,
               width, height, @background,
               0, height, @background)
-    blabla(@lines)
-
+    for_display(@board.grid)
+    @font.draw("Score: #{@board.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xffffff00)
   end
   def for_draw(color, counter_line, counter)
     draw_quad(counter * @column_w, counter_line * @row_h, color,
@@ -52,7 +58,7 @@ class GameWindow < Gosu::Window
               counter * @column_w, (counter_line + 1) * @row_h - 4, color)
   end
 
-  def blabla(lines)
+  def for_display(lines)
     counter_line = 0
     while counter_line < 4
       counter = 0
@@ -97,95 +103,89 @@ class GameWindow < Gosu::Window
     case
     when id == Gosu::KbEscape
       close
-    when id == Gosu::KbR
-      @game.universe.randomly_recovery
     when id == Gosu::KbLeft
-      left_all(@lines)
-      # add_value(@lines)
+      @board.left_all(@board.grid)
     when id == Gosu::KbRight
-      right_all(@lines)
-      # add_value(@lines)
+      @board.right_all(@board.grid)
     when id == Gosu::KbUp
-      @lines = up_all(@lines)
-      # add_value(@lines)
+      @board.grid = @board.up_all(@board.grid)
     when id == Gosu::KbDown
-      @lines = down_all(@lines)
-      # add_value(@lines)
+      @board.grid = @board.down_all(@board.grid)
     end
   end
 
-  def left(line)
-    counter = 0
+  # def move(line)
+  #   counter = 0
 
-    line.compact!
-    while counter < 3
-      if !line[counter].nil? && line[counter] == line[counter+1]
-        merge(line, counter)
-      end
-      counter += 1
-    end
-    (4 - line.size).times { line << nil }
-    line
-  end
+  #   line.compact!
+  #   while counter < 3
+  #     if !line[counter].nil? && line[counter] == line[counter+1]
+  #       merge(line, counter)
+  #     end
+  #     counter += 1
+  #   end
+  #   (4 - line.size).times { line << nil }
+  #   line
+  # end
 
-  def merge(line, index)
-    line[index] *= 2
-    line.delete_at(index+1)
-    #line
-  end
+  # def merge(line, index)
+  #   line[index] *= 2
+  #   line.delete_at(index+1)
+  #   #line
+  # end
 
-  def left_all(lines)
-    lines_check = lines.flatten
-    lines.each do |line|
-      left(line)
-    end
-    if lines_check != lines.flatten
-      add_value(lines)
-    end
-  end
+  # def left_all(lines)
+  #   lines_check = lines.flatten
+  #   lines.each do |line|
+  #     move(line)
+  #   end
+  #   if lines_check != lines.flatten
+  #     add_value(lines)
+  #   end
+  # end
 
-  def add_value(lines)
-    x = rand(4)
-    y = rand(4)
-    if lines[x][y] == nil
-      lines[x][y] = rand > 0.1 ? 2 : 4
-    else
-      add_value(lines)
-    end
-  end
+  # def add_value(lines)
+  #   x = rand(4)
+  #   y = rand(4)
+  #   if lines[x][y] == nil
+  #     lines[x][y] = rand > 0.1 ? 2 : 4
+  #   else
+  #     add_value(lines)
+  #   end
+  # end
 
-  def end_game(lines)
-    lines.dup
-  end
+  # def end_game(lines)
+  #   lines.dup
+  # end
 
-  def right_all(lines)
-    lines_check = lines.flatten
-    lines.each do |line|
-      line.reverse!
-      left(line)
-      line.reverse!
-    end
-    add_value(lines) if lines_check != lines.flatten
-  end
+  # def right_all(lines)
+  #   lines_check = lines.flatten
+  #   lines.each do |line|
+  #     line.reverse!
+  #     move(line)
+  #     line.reverse!
+  #   end
+  #   add_value(lines) if lines_check != lines.flatten
+  # end
 
-  def up_all(lines)
-    lines_check = lines.flatten
-    transposed_lines = lines.transpose
-    # transposed_lines.each do |line|
-    #   left(line)
-    # end
-    left_all(transposed_lines)
-    result_line = transposed_lines.transpose
-    add_value(lines) if lines_check != result_line.flatten
-    result_line
-  end
+  # def up_all(lines)
+  #   lines_check = lines.flatten
+  #   transposed_lines = lines.transpose
+  #   # transposed_lines.each do |line|
+  #   #   move(line)
+  #   # end
+  #   left_all(transposed_lines)
+  #   result_line = transposed_lines.transpose
+  #   add_value(lines) if lines_check != result_line.flatten
+  #   result_line
+  # end
 
 
-  def down_all(lines)
-    transposed_lines = lines.transpose
-    right_all(transposed_lines)
-    transposed_lines.transpose
-  end
+  # def down_all(lines)
+  #   transposed_lines = lines.transpose
+  #   right_all(transposed_lines)
+  #   transposed_lines.transpose
+  # end
 end
 
 window = GameWindow.new

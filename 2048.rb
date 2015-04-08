@@ -1,77 +1,95 @@
 class Board
-	attr_accessor :rows, :columns, :grid, :cells
+	attr_accessor :rows, :columns, :grid, :score
 	def initialize(rows = 4, columns = 4)
 		@rows = rows
 		@columns = columns
-		@cells = []
+		@score = 0
 		@grid = Array.new(rows) do |row|
 							Array.new(columns) do |column|
-								cell = Cell.new(column, row)
-								cells << cell
-								cell
+								column = nil
 		 					end
 		 				end
-		@cells.each do |cell|
-			cell.value = rand > 0.4 ? 2 : nil
-		end
 	end
+  def move(line)
+    counter = 0
 
-	def left(row)
+    line.compact!
+    while counter < 3
+      if !line[counter].nil? && line[counter] == line[counter+1]
+        merge(line, counter)
+      end
+      counter += 1
+    end
+    (4 - line.size).times { line << nil }
+    line
+  end
 
-	  counter = 0
-	  while counter < 3
-	    if !row[counter].nil? && row[counter] == row[counter+1]
-	      row = merge(row, counter)
-	    end
-	    counter += 1
-	  end
+  def merge(line, index)
+    line[index] *= 2
+    @score += line[index]
+    line.delete_at(index+1)
+    #line
+  end
 
-	  (row.compact + Array.new(4))[0..3]
+  def left_all(lines)
+    lines_check = lines.flatten
+    lines.each do |line|
+      move(line)
+    end
+    if lines_check != lines.flatten
+      add_value(lines)
+    end
+  end
 
-	end
+  def add_value(lines)
+    x = rand(4)
+    y = rand(4)
+    if lines[x][y] == nil
+      lines[x][y] = rand > 0.1 ? 2 : 4
+    else
+      add_value(lines)
+    end
+  end
+
+  def end_game(lines)
+    lines.dup
+  end
+
+  def right_all(lines)
+    lines_check = lines.flatten
+    lines.each do |line|
+      line.reverse!
+      move(line)
+      line.reverse!
+    end
+    add_value(lines) if lines_check != lines.flatten
+  end
+
+  def up_all(lines)
+    lines_check = lines.flatten
+    transposed_lines = lines.transpose
+    # transposed_lines.each do |line|
+    #   move(line)
+    # end
+    left_all(transposed_lines)
+    result_line = transposed_lines.transpose
+    add_value(lines) if lines_check != result_line.flatten
+    result_line
+  end
 
 
-	def merge(row, index)
-	  row[index] *= 2
-		row.delete_at(index+1)
-	  row
-	end
+  def down_all(lines)
+    transposed_lines = lines.transpose
+    right_all(transposed_lines)
+    transposed_lines.transpose
+  end
 
-	# def rewrite
-	# left(row).each do |row|
-	#   row.each do |element|
-	#     sell.x.value = element
-	# 		end
-	# 	end
-	# end
-
-	def all_nil_cell
-		cells.select { |cell| cell.nil?}
-	end
-	# def rand_value
-	# 	all_nil_cell.sample =
-	# end
-	# def randomly_recovery
-	# 	cells.each do |cell|
-	# 		cell.alive =  rand > 0.6 ? 2 : false
-	# 	end
-	# end
-end
-
-
-class Cell
-	attr_accessor :value, :x, :y
-	def initialize(x = 0, y = 0)
-		@x = x
-		@y = y
-		@value = nil
-	end
 end
 
 
 class LogicGame
 	attr_accessor :board, :fortestcells
-	def initialize(board = Board.new, fortestcells = [])
+	def initialize(board = Board.new)
 		@board = board
 	end
 end
