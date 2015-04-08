@@ -5,31 +5,32 @@ class GameWindow < Gosu::Window
   def initialize(height=430, width=406)
     @height = height
     @width = width
+    @is_victory = false
     super(width, height, false)
     self.caption = "2048     (¬_¬) press Escape to exit ^~^"
 
     @background = Gosu::Color.new(0xffbbf6e2)
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
 
-    @color2 = Gosu::Color.new(0xff75cae3)
-    @color4 = Gosu::Color.new(0xff238dac)
-    @color8 = Gosu::Color.new(0xff124a5a)
-    @color16 = Gosu::Color.new(0xff0c2f3a)
-    @color32 = Gosu::Color.new(0xff91f22e)
-    @color64 = Gosu::Color.new(0xff2df22c)
-    @color128 = Gosu::Color.new(0xff0dc30c)
-    @color256 = Gosu::Color.new(0xff087a07)
-    @color512 = Gosu::Color.new(0xffe0c613)
+    @color2    = Gosu::Color.new(0xff75cae3)
+    @color4    = Gosu::Color.new(0xff238dac)
+    @color8    = Gosu::Color.new(0xff124a5a)
+    @color16   = Gosu::Color.new(0xff0c2f3a)
+    @color32   = Gosu::Color.new(0xff91f22e)
+    @color64   = Gosu::Color.new(0xff2df22c)
+    @color128  = Gosu::Color.new(0xff0dc30c)
+    @color256  = Gosu::Color.new(0xff087a07)
+    @color512  = Gosu::Color.new(0xffe0c613)
     @color1024 = Gosu::Color.new(0xff74660a)
     @color2048 = Gosu::Color.new(0xffef19f1)
-    @free = Gosu::Color.new(0xffb6e3f0)
-    @dead_color = Gosu::Color.new(0xffffffff)
+    @free      = Gosu::Color.new(0xffb6e3f0)
     # @columns = 
     # @rows = height/100
     @column_w = 100
     @row_h = 100
     @board = Board.new()
-    @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 1024],[2,2,4,8]]
+    # @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 512, 2],[4,8,16,32]]
+    @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
     # 2.times { @board.add_value(@board.grid) }
     # @game = LogicGame.new(@board)
     # @game.board.rand_value
@@ -51,7 +52,9 @@ class GameWindow < Gosu::Window
               0, height, @background)
     for_display(@board.grid)
     @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
-    @font.draw("Press R to resrart", 200, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+    @font.draw("Press R to resrart", 250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+    victory(@board.grid) unless @is_victory
+    lose(@board.grid)
   end
   def for_draw(color, counter_line, counter)
     draw_quad(counter * @column_w + 4, counter_line * @row_h + 30, color,
@@ -117,81 +120,45 @@ class GameWindow < Gosu::Window
       @board.grid = @board.up_all(@board.grid)
     when id == Gosu::KbDown
       @board.grid = @board.down_all(@board.grid)
+    when id == Gosu::KbSpace
+      @is_victory = true
     end
   end
 
-  # def move(line)
-  #   counter = 0
+  def victory(lines)
+    if lines.flatten.include?(2048)
+      @font.draw("You Win", 100, 100, Coordinates::UI, 4.0, 4.0, 0xff0a7466)
+      @font.draw("Press 'space' to continue ", 130, 230, Coordinates::UI, 1.0, 1.0, 0xff0a7466)
+    end
+  end
 
-  #   line.compact!
-  #   while counter < 3
-  #     if !line[counter].nil? && line[counter] == line[counter+1]
-  #       merge(line, counter)
-  #     end
-  #     counter += 1
-  #   end
-  #   (4 - line.size).times { line << nil }
-  #   line
-  # end
-
-  # def merge(line, index)
-  #   line[index] *= 2
-  #   line.delete_at(index+1)
-  #   #line
-  # end
-
-  # def left_all(lines)
-  #   lines_check = lines.flatten
-  #   lines.each do |line|
-  #     move(line)
-  #   end
-  #   if lines_check != lines.flatten
-  #     add_value(lines)
-  #   end
-  # end
-
-  # def add_value(lines)
-  #   x = rand(4)
-  #   y = rand(4)
-  #   if lines[x][y] == nil
-  #     lines[x][y] = rand > 0.1 ? 2 : 4
-  #   else
-  #     add_value(lines)
-  #   end
-  # end
-
-  # def end_game(lines)
-  #   lines.dup
-  # end
-
-  # def right_all(lines)
-  #   lines_check = lines.flatten
-  #   lines.each do |line|
-  #     line.reverse!
-  #     move(line)
-  #     line.reverse!
-  #   end
-  #   add_value(lines) if lines_check != lines.flatten
-  # end
-
-  # def up_all(lines)
-  #   lines_check = lines.flatten
-  #   transposed_lines = lines.transpose
-  #   # transposed_lines.each do |line|
-  #   #   move(line)
-  #   # end
-  #   left_all(transposed_lines)
-  #   result_line = transposed_lines.transpose
-  #   add_value(lines) if lines_check != result_line.flatten
-  #   result_line
-  # end
-
-
-  # def down_all(lines)
-  #   transposed_lines = lines.transpose
-  #   right_all(transposed_lines)
-  #   transposed_lines.transpose
-  # end
+  def lose(lines)
+    arr = lines.flatten.select {|value| value.nil?}
+    if arr.empty?
+      add_counter = 0
+      lines.each { |line|
+        counter = 0
+        while counter < 3
+          if !line[counter].nil? && line[counter] == line[counter + 1]
+            add_counter += 1
+          end
+          counter += 1
+        end
+      }
+      lines.transpose.each { |line|
+        counter = 0
+        while counter < 3
+          if line[counter] !=nil && line[counter] == line[counter + 1]
+            add_counter += 1
+          end
+          counter += 1
+        end
+      }
+      if add_counter == 0
+        @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xfff37686)
+      end
+    end
+  end
 end
 
 window = GameWindow.new
