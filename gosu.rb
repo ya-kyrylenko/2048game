@@ -2,10 +2,10 @@ require 'gosu'
 require_relative '2048.rb'
 
 class GameWindow < Gosu::Window
-  def initialize(height=420, width=420)
+  def initialize(height=430, width=406)
     @height = height
     @width = width
-    super(height, width, false)
+    super(width, height, false)
     self.caption = "2048     (¬_¬) press Escape to exit ^~^"
 
     @background = Gosu::Color.new(0xffbbf6e2)
@@ -24,21 +24,22 @@ class GameWindow < Gosu::Window
     @color2048 = Gosu::Color.new(0xffef19f1)
     @free = Gosu::Color.new(0xffb6e3f0)
     @dead_color = Gosu::Color.new(0xffffffff)
-    @columns = width/100
-    @rows = height/100
-    @column_w = width/@columns
-    @row_h = height/@rows
+    # @columns = 
+    # @rows = height/100
+    @column_w = 100
+    @row_h = 100
     @board = Board.new()
-    2.times { @board.add_value(@board.grid) }
+    @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 1024],[2,2,4,8]]
+    # 2.times { @board.add_value(@board.grid) }
     # @game = LogicGame.new(@board)
     # @game.board.rand_value
     # @lines = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 1024],[2,2,4,8]]
     # @lines = [[2, 2, nil, nil],[nil,nil,nil,nil],[nil,nil,nil,nil],[nil,nil,nil,nil]]
     # @lines = [[2, 2, nil, nil, nil],[nil,nil,nil,nil, nil],[nil,nil,nil,nil,nil],[nil,nil,nil,nil,nil]]
   end
-  module ZOrder
-  Background, Stars, Player, UI = *0..3
-end
+  module Coordinates
+  Bla, UI = *0..3
+  end
 
   def update
   end
@@ -49,13 +50,15 @@ end
               width, height, @background,
               0, height, @background)
     for_display(@board.grid)
-    @font.draw("Score: #{@board.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+    @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+    @font.draw("Press R to resrart", 200, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
   end
   def for_draw(color, counter_line, counter)
-    draw_quad(counter * @column_w, counter_line * @row_h, color,
-              (counter + 1) * @column_w - 4, counter_line * @row_h, color,
-              (counter + 1) * @column_w - 4, (counter_line + 1) * @row_h - 4, color,
-              counter * @column_w, (counter_line + 1) * @row_h - 4, color)
+    draw_quad(counter * @column_w + 4, counter_line * @row_h + 30, color,
+              (counter + 1) * @column_w, counter_line * @row_h + 30, color,
+              (counter + 1) * @column_w, (counter_line + 1) * @row_h - 4 + 30, color,
+              counter * @column_w + 4, (counter_line + 1) * @row_h - 4 + 30, color)
+    @font.draw(" #{@board.grid[counter_line][counter]}", counter * @column_w + (93 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
   end
 
   def for_display(lines)
@@ -103,6 +106,9 @@ end
     case
     when id == Gosu::KbEscape
       close
+    when id == Gosu::KbR
+      @board = Board.new()
+      2.times { @board.add_value(@board.grid) }
     when id == Gosu::KbLeft
       @board.left_all(@board.grid)
     when id == Gosu::KbRight

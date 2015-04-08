@@ -88,7 +88,7 @@ end
 
 
 class LogicGame
-	attr_accessor :board, :fortestcells
+	attr_accessor :board
 	def initialize(board = Board.new)
 		@board = board
 	end
