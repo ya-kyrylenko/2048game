@@ -77,10 +77,3 @@ class Board
     line.delete_at(index+1)
   end
 end
-
-class LogicGame
-	attr_accessor :board
-	def initialize(board = Board.new)
-		@board = board
-	end
-end
