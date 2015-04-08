@@ -23,20 +23,15 @@ class GameWindow < Gosu::Window
     @color512  = Gosu::Color.new(0xffe0c613)
     @color1024 = Gosu::Color.new(0xff74660a)
     @color2048 = Gosu::Color.new(0xffef19f1)
+    @color4096 = Gosu::Color.new(0xff780779)
+    @color8192 = Gosu::Color.new(0xff1d021d)
     @free      = Gosu::Color.new(0xffb6e3f0)
-    # @columns = 
-    # @rows = height/100
     @column_w = 100
     @row_h = 100
     @board = Board.new()
-    # @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 512, 2],[4,8,16,32]]
-    @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
-    # 2.times { @board.add_value(@board.grid) }
-    # @game = LogicGame.new(@board)
-    # @game.board.rand_value
-    # @lines = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 1024],[2,2,4,8]]
-    # @lines = [[2, 2, nil, nil],[nil,nil,nil,nil],[nil,nil,nil,nil],[nil,nil,nil,nil]]
-    # @lines = [[2, 2, nil, nil, nil],[nil,nil,nil,nil, nil],[nil,nil,nil,nil,nil],[nil,nil,nil,nil,nil]]
+    # @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,8,16,32]]
+    # @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
+    2.times { @board.add_value(@board.grid) }
   end
   module Coordinates
   Bla, UI = *0..3
@@ -92,6 +87,10 @@ class GameWindow < Gosu::Window
           for_draw(@color1024, counter_line, counter)
         when lines[counter_line][counter] == 2048
           for_draw(@color2048, counter_line, counter)
+        when lines[counter_line][counter] == 4096
+          for_draw(@color4096, counter_line, counter)
+        when lines[counter_line][counter] == 8192
+          for_draw(@color8192, counter_line, counter)
         when lines[counter_line][counter] == nil
           for_draw(@free, counter_line, counter)
         end
@@ -127,8 +126,8 @@ class GameWindow < Gosu::Window
 
   def victory(lines)
     if lines.flatten.include?(2048)
-      @font.draw("You Win", 100, 100, Coordinates::UI, 4.0, 4.0, 0xff0a7466)
-      @font.draw("Press 'space' to continue ", 130, 230, Coordinates::UI, 1.0, 1.0, 0xff0a7466)
+      @font.draw("You Win", 100, 180, Coordinates::UI, 3.0, 3.0, 0xff042b26)
+      @font.draw("Press 'space' to skip message ", 100, 230, Coordinates::UI, 1.0, 1.0, 0xff042b26)
     end
   end
 
@@ -155,7 +154,8 @@ class GameWindow < Gosu::Window
         end
       }
       if add_counter == 0
-        @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xfff37686)
+        @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xff111f02)
+        @is_victory = true
       end
     end
   end
