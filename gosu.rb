@@ -24,13 +24,16 @@ class GameWindow < Gosu::Window
                       0xff74660a,
                       0xffef19f1,
                       0xff780779,
+                      0xff1d021d,
+                      0xff1d021d,
+                      0xff1d021d,
                       0xff1d021d ]
 
     @column_w = 100
     @row_h = 100
     @board = Board.new()
-    @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,8,16,32]]
-    @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
+    @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,16384,32768,65536]]
+    # @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
     # 2.times { @board.add_number }
   end
   module Coordinates
@@ -56,7 +59,7 @@ class GameWindow < Gosu::Window
               (counter + 1) * @column_w, counter_line * @row_h + 30,           color,
               (counter + 1) * @column_w, (counter_line + 1) * @row_h - 4 + 30, color,
               counter * @column_w + 4,   (counter_line + 1) * @row_h - 4 + 30, color)
-    @font.draw(" #{@board.grid[counter_line][counter]}", counter * @column_w + (93 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
+    @font.draw(" #{@board.grid[counter_line][counter]}", counter * (@column_w + 1) + (90 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
   end
 
   def for_display(lines)
@@ -64,7 +67,7 @@ class GameWindow < Gosu::Window
     while counter_line < 4
       counter = 0
       while counter < 4
-        13.times do |degree|
+        16.times do |degree|
           if lines[counter_line][counter] == 2**(degree + 1)
             for_draw(Gosu::Color.new(@colors_array[degree]), counter_line, counter)
           end
