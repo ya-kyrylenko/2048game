@@ -58,14 +58,6 @@ class GameWindow < Gosu::Window
     for_display_lose(@board.lose?)
   end
 
-  def for_draw_cell(color, counter_line, counter)
-    draw_quad(counter * @column_w + 4,   counter_line * @row_h + 30,           color,
-              (counter + 1) * @column_w, counter_line * @row_h + 30,           color,
-              (counter + 1) * @column_w, (counter_line + 1) * @row_h - 4 + 30, color,
-              counter * @column_w + 4,   (counter_line + 1) * @row_h - 4 + 30, color)
-    @font.draw(" #{@board.grid[counter_line][counter]}", counter * (@column_w + 1) + (90 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
-  end
-
   def for_display_cells(lines)
     counter_line = 0
     while counter_line < 4
@@ -119,6 +111,16 @@ class GameWindow < Gosu::Window
 
   def for_display_lose(lose)
     @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xff111f02) if lose
+  end
+
+  private
+
+  def for_draw_cell(color, counter_line, counter)
+    draw_quad(counter * @column_w + 4,   counter_line * @row_h + 30,           color,
+              (counter + 1) * @column_w, counter_line * @row_h + 30,           color,
+              (counter + 1) * @column_w, (counter_line + 1) * @row_h - 4 + 30, color,
+              counter * @column_w + 4,   (counter_line + 1) * @row_h - 4 + 30, color)
+    @font.draw(" #{@board.grid[counter_line][counter]}", counter * (@column_w + 1) + (90 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
   end
 end
 
