@@ -32,9 +32,9 @@ class GameWindow < Gosu::Window
     @column_w = 100
     @row_h = 100
     @board = Board.new()
-    @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,16384,32768,65536]]
+    # @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,16384,32768,65536]]
     # @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
-    # 2.times { @board.add_number }
+    2.times { @board.add_number }
   end
   module Coordinates
   Bla, UI = *0..3
