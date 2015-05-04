@@ -52,10 +52,10 @@ class GameWindow < Gosu::Window
     for_display(@board.grid)
 
     @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
-    @font.draw("Press R to resrart", 250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+    @font.draw("Press R to resrart",    250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
 
-    for_victory(@board.victory?) unless @board.is_victory
-    for_lose(@board.lose?)
+    for_display_victory(@board.victory?) unless @board.is_victory
+    for_display_lose(@board.lose?)
   end
 
   def for_draw(color, counter_line, counter)
