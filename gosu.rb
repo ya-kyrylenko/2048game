@@ -110,14 +110,14 @@ class GameWindow < Gosu::Window
     end
   end
 
-  def for_victory(win)
+  def for_display_victory(win)
     if win
       @font.draw("You Win", 100, 180, Coordinates::UI, 3.0, 3.0, 0xff042b26)
       @font.draw("Press 'space' to skip message ", 100, 230, Coordinates::UI, 1.0, 1.0, 0xff042b26)
     end
   end
 
-  def for_lose(lose)
+  def for_display_lose(lose)
     @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xff111f02) if lose
   end
 end
