@@ -35,6 +35,7 @@ class GameWindow < Gosu::Window
     # @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,16384,32768,65536]]
     # @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
   end
+
   module Coordinates
   Bla, UI = *0..3
   end
@@ -56,6 +57,7 @@ class GameWindow < Gosu::Window
     for_victory(@board.victory?) unless @board.is_victory
     for_lose(@board.lose?)
   end
+
   def for_draw(color, counter_line, counter)
     draw_quad(counter * @column_w + 4,   counter_line * @row_h + 30,           color,
               (counter + 1) * @column_w, counter_line * @row_h + 30,           color,
