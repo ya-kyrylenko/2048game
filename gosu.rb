@@ -34,7 +34,6 @@ class GameWindow < Gosu::Window
     @board = Board.new()
     # @board.grid = [[2, 4, 8, 16],[32, 64, 128, 256],[512, 1024, 2048, 4096],[8192,16384,32768,65536]]
     # @board.grid = [[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128],[128, 128, 128, 128]]
-    2.times { @board.add_number }
   end
   module Coordinates
   Bla, UI = *0..3
@@ -48,9 +47,12 @@ class GameWindow < Gosu::Window
               width, 0,      @background,
               width, height, @background,
               0,     height, @background)
+
     for_display(@board.grid)
+
     @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
     @font.draw("Press R to resrart", 250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+
     for_victory(@board.victory?) unless @board.is_victory
     for_lose(@board.lose?)
   end
@@ -89,7 +91,6 @@ class GameWindow < Gosu::Window
       close
     when id == Gosu::KbR
       @board = Board.new()
-      2.times { @board.add_number }
     when id == Gosu::KbLeft
       @board.left_move(@board.grid)
       @board.add_number_if_changed_for_horizontal

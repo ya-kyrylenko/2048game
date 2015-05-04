@@ -11,6 +11,7 @@ class Board
 		 					end
 		 				end
     @lines_check = nil
+    2.times { add_number }
 	end
 
   def left_move(lines)
@@ -39,16 +40,6 @@ class Board
     transposed_lines = lines.transpose
     right_move(transposed_lines)
     transposed_lines.transpose
-  end
-
-  def add_number
-    x = rand(4)
-    y = rand(4)
-    if @grid[x][y] == nil
-      @grid[x][y] = rand > 0.1 ? 2 : 4
-    else
-      add_number
-    end
   end
 
   def add_number_if_changed_for_horizontal
@@ -109,5 +100,15 @@ class Board
       end
     }
     add_counter
+  end
+
+  def add_number
+    x = rand(4)
+    y = rand(4)
+    if @grid[x][y] == nil
+      @grid[x][y] = rand > 0.1 ? 2 : 4
+    else
+      add_number
+    end
   end
 end
