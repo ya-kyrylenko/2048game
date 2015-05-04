@@ -49,7 +49,7 @@ class GameWindow < Gosu::Window
               width, height, @background,
               0,     height, @background)
 
-    for_display(@board.grid)
+    for_display_cells(@board.grid)
 
     @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
     @font.draw("Press R to resrart",    250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
@@ -58,7 +58,7 @@ class GameWindow < Gosu::Window
     for_display_lose(@board.lose?)
   end
 
-  def for_draw(color, counter_line, counter)
+  def for_draw_cell(color, counter_line, counter)
     draw_quad(counter * @column_w + 4,   counter_line * @row_h + 30,           color,
               (counter + 1) * @column_w, counter_line * @row_h + 30,           color,
               (counter + 1) * @column_w, (counter_line + 1) * @row_h - 4 + 30, color,
@@ -66,17 +66,17 @@ class GameWindow < Gosu::Window
     @font.draw(" #{@board.grid[counter_line][counter]}", counter * (@column_w + 1) + (90 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
   end
 
-  def for_display(lines)
+  def for_display_cells(lines)
     counter_line = 0
     while counter_line < 4
       counter = 0
       while counter < 4
         16.times do |degree|
           if lines[counter_line][counter] == 2**(degree + 1)
-            for_draw(Gosu::Color.new(@colors_array[degree]), counter_line, counter)
+            for_draw_cell(Gosu::Color.new(@colors_array[degree]), counter_line, counter)
           end
         end
-        for_draw(@free, counter_line, counter) unless lines[counter_line][counter]
+        for_draw_cell(@free, counter_line, counter) unless lines[counter_line][counter]
         counter += 1
       end
       counter_line += 1
