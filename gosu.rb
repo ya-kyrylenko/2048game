@@ -1,5 +1,6 @@
 require 'gosu'
 require_relative '2048.rb'
+require_relative 'Command.rb'
 
 class GameWindow < Gosu::Window
   def initialize(height=430, width=406)
@@ -50,8 +51,9 @@ class GameWindow < Gosu::Window
               0,     height, @background)
 
     for_display_cells(@board.grid)
-
-    @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+# command.new(@board.grid)
+    @font.draw("Score: #{Move.new(@board.grid).score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+    # @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
     @font.draw("Press R to resrart",    250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
 
     for_display_victory(@board.victory?) unless @board.is_victory
@@ -80,24 +82,29 @@ class GameWindow < Gosu::Window
   end
 
   def button_down(id)
-    case
-    when id == Gosu::KbEscape
+    case id
+    when Gosu::KbEscape
       close
-    when id == Gosu::KbR
+    when Gosu::KbR
       @board = Board.new()
-    when id == Gosu::KbLeft
-      @board.left_move(@board.grid)
-      @board.add_number_if_changed_for_horizontal
-    when id == Gosu::KbRight
-      @board.right_move(@board.grid)
-      @board.add_number_if_changed_for_horizontal
-    when id == Gosu::KbUp
-      @board.grid = @board.up_move(@board.grid)
-      @board.add_number_if_changed_for_vertical
-    when id == Gosu::KbDown
-      @board.grid = @board.down_move(@board.grid)
-      @board.add_number_if_changed_for_vertical
-    when id == Gosu::KbSpace
+    when Gosu::KbLeft
+      launchMove Move
+      # @board.left_move(@board.grid)
+      # @board.add_number_if_changed_for_horizontal
+    when Gosu::KbRight
+      # @board.right_move(@board.grid)
+      # @board.add_number_if_changed_for_horizontal
+      launchMove RightMove
+    when Gosu::KbUp
+      @board.grid = launchMove UpMove
+      # @board.up_move(@board.grid)
+      # @board.add_number_if_changed_for_vertical
+    when Gosu::KbDown
+      @board.grid = launchMove DownMove
+      # @board.grid = @board.down_move(@board.grid)
+      # @board.down_move(@board.grid)
+      # @board.add_number_if_changed_for_vertical
+    when Gosu::KbSpace
       @board.is_victory = true
     end
   end
@@ -111,6 +118,10 @@ class GameWindow < Gosu::Window
 
   def for_display_lose(lose)
     @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xff111f02) if lose
+  end
+
+  def launchMove(command)
+    command.new(@board.grid).execute
   end
 
   private
