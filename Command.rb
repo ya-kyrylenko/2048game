@@ -1,4 +1,4 @@
-class Move
+class LeftMove
 	attr_accessor :lines
 	def initialize(object)
 		@lines = object.grid
@@ -45,13 +45,7 @@ class Move
   end
 end
 
-class LeftMove < Move
-	def execute
-    super
-	end
-end
-
-class RightMove < Move
+class RightMove < LeftMove
 	def execute
 		@lines.each { |line| line.reverse!}
     super
@@ -59,7 +53,7 @@ class RightMove < Move
 	end
 end
 
-class UpMove < Move
+class UpMove < LeftMove
 	def execute
     @lines = @lines.transpose
 		super

@@ -86,16 +86,13 @@ class GameWindow < Gosu::Window
     when Gosu::KbR
       @board = Board.new()
     when Gosu::KbLeft
-      launchMove Move
+      launchMove LeftMove
     when Gosu::KbRight
       launchMove RightMove
     when Gosu::KbUp
       launchMove UpMove
     when Gosu::KbDown
       launchMove DownMove
-      # @board.grid = @board.down_move(@board.grid)
-      # @board.down_move(@board.grid)
-      # @board.add_number_if_changed_for_vertical
     when Gosu::KbSpace
       @board.is_victory = true
     end

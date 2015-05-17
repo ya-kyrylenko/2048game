@@ -31,7 +31,6 @@ class Board
   end
 
   private
-check for a loss
   def check_shift(lines, add_counter)
     lines.each { |line|
       counter = 0
