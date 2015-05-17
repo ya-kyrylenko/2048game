@@ -51,9 +51,7 @@ class GameWindow < Gosu::Window
               0,     height, @background)
 
     for_display_cells(@board.grid)
-# command.new(@board.grid)
-    @font.draw("Score: #{Move.new(@board.grid).score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
-    # @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
+    @font.draw("Score: #{@board.score}", 10, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
     @font.draw("Press R to resrart",    250, 10, Coordinates::UI, 1.0, 1.0, 0xff7b1934)
 
     for_display_victory(@board.victory?) unless @board.is_victory
@@ -89,18 +87,12 @@ class GameWindow < Gosu::Window
       @board = Board.new()
     when Gosu::KbLeft
       launchMove Move
-      # @board.left_move(@board.grid)
-      # @board.add_number_if_changed_for_horizontal
     when Gosu::KbRight
-      # @board.right_move(@board.grid)
-      # @board.add_number_if_changed_for_horizontal
       launchMove RightMove
     when Gosu::KbUp
-      @board.grid = launchMove UpMove
-      # @board.up_move(@board.grid)
-      # @board.add_number_if_changed_for_vertical
+      launchMove UpMove
     when Gosu::KbDown
-      @board.grid = launchMove DownMove
+      launchMove DownMove
       # @board.grid = @board.down_move(@board.grid)
       # @board.down_move(@board.grid)
       # @board.add_number_if_changed_for_vertical
@@ -121,7 +113,7 @@ class GameWindow < Gosu::Window
   end
 
   def launchMove(command)
-    command.new(@board.grid).execute
+    command.new(@board).execute
   end
 
   private

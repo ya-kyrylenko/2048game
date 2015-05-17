@@ -1,8 +1,8 @@
 class Move
-	attr_accessor :lines, :score
-	def initialize(lines)
-		@lines = lines
-    @score = 0
+	attr_accessor :lines
+	def initialize(object)
+		@lines = object.grid
+    @object = object
 	end
   def execute
     lines_check = @lines.flatten
@@ -30,7 +30,7 @@ class Move
 
   def merge(line, index)
     line[index] *= 2
-    @score += line[index]
+    @object.score += line[index]
     line.delete_at(index+1)
   end
 
@@ -63,7 +63,7 @@ class UpMove < Move
 	def execute
     @lines = @lines.transpose
 		super
-    @lines.transpose
+    @object.grid = @lines.transpose
 	end
 end
 
@@ -71,6 +71,6 @@ class DownMove < RightMove
 	def execute()
     @lines = @lines.transpose
     super
-    @lines.transpose
+    @object.grid = @lines.transpose
 	end
 end
