@@ -65,6 +65,8 @@ class Down < Move
   end
 end
 
+# Можно использовать данный класс чтобы избежать повторений, но теряется логика наследования.
+
 # class Down < Right
 #   def execute()
 #     @lines = @lines.transpose
