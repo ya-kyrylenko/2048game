@@ -1,4 +1,5 @@
-class LeftMove
+class Move
+  include AddNumber
 	attr_accessor :lines
 	def initialize(object)
 		@lines = object.grid
@@ -9,7 +10,7 @@ class LeftMove
     lines.each do |line|
       move(line)
     end
-    add_number if lines_check != @lines.flatten
+    add_number(@lines) if lines_check != @lines.flatten
   end
 
 	private
@@ -33,19 +34,12 @@ class LeftMove
     @object.score += line[index]
     line.delete_at(index+1)
   end
-
-  def add_number
-    x = rand(4)
-    y = rand(4)
-    if @lines[x][y] == nil
-      @lines[x][y] = rand > 0.1 ? 2 : 4
-    else
-      add_number
-    end
-  end
 end
 
-class RightMove < LeftMove
+class Left < Move
+end
+
+class Right < Move
 	def execute
 		@lines.each { |line| line.reverse!}
     super
@@ -53,7 +47,7 @@ class RightMove < LeftMove
 	end
 end
 
-class UpMove < LeftMove
+class Up < Move
 	def execute
     @lines = @lines.transpose
 		super
@@ -61,10 +55,20 @@ class UpMove < LeftMove
 	end
 end
 
-class DownMove < RightMove
-	def execute()
+class Down < Move
+  def execute()
     @lines = @lines.transpose
+    @lines.each { |line| line.reverse!}
     super
+    @lines.each { |line| line.reverse!}
     @object.grid = @lines.transpose
-	end
+  end
 end
+
+# class Down < Right
+#   def execute()
+#     @lines = @lines.transpose
+#     super
+#     @object.grid = @lines.transpose
+#   end
+# end

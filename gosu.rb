@@ -1,6 +1,7 @@
 require 'gosu'
+require './module.rb'
 require_relative '2048.rb'
-require_relative 'Command.rb'
+require_relative 'command.rb'
 
 class GameWindow < Gosu::Window
   def initialize(height=430, width=406)
@@ -86,13 +87,13 @@ class GameWindow < Gosu::Window
     when Gosu::KbR
       @board = Board.new()
     when Gosu::KbLeft
-      launchMove LeftMove
+      launchMove Left
     when Gosu::KbRight
-      launchMove RightMove
+      launchMove Right
     when Gosu::KbUp
-      launchMove UpMove
+      launchMove Up
     when Gosu::KbDown
-      launchMove DownMove
+      launchMove Down
     when Gosu::KbSpace
       @board.is_victory = true
     end
@@ -109,10 +110,6 @@ class GameWindow < Gosu::Window
     @font.draw("Game Over", 80, 180, Coordinates::UI, 3.0, 3.0, 0xff111f02) if lose
   end
 
-  def launchMove(command)
-    command.new(@board).execute
-  end
-
   private
 
   def for_draw_cell(color, counter_line, counter)
@@ -121,6 +118,10 @@ class GameWindow < Gosu::Window
               (counter + 1) * @column_w, (counter_line + 1) * @row_h - 4 + 30, color,
               counter * @column_w + 4,   (counter_line + 1) * @row_h - 4 + 30, color)
     @font.draw(" #{@board.grid[counter_line][counter]}", counter * (@column_w + 1) + (90 - @board.grid[counter_line][counter].to_s.size * 22)/2, counter_line * @row_h + 60, Coordinates::UI, 2.0, 2.0, 0xffffff00)
+  end
+
+  def launchMove(command)
+    command.new(@board).execute
   end
 end
 

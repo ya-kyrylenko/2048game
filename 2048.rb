@@ -1,4 +1,5 @@
 class Board
+  include AddNumber
 	attr_accessor :rows, :columns, :grid, :score, :is_victory
 	def initialize(rows = 4, columns = 4)
 		@rows = rows
@@ -10,7 +11,7 @@ class Board
 								column = nil
 		 					end
 		 				end
-    2.times { add_number }
+    2.times { add_number(@grid) }
 	end
 
   def victory?
@@ -42,15 +43,5 @@ class Board
       end
     }
     add_counter
-  end
-
-  def add_number
-    x = rand(4)
-    y = rand(4)
-    if @grid[x][y] == nil
-      @grid[x][y] = rand > 0.1 ? 2 : 4
-    else
-      add_number
-    end
   end
 end
